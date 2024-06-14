@@ -26,9 +26,7 @@ public class ProductManagementTest {
                 new Product(1, "Product A", 10.0, 5, true),
                 new Product(2, "Product B", 20.0, 3, true),
                 new Product(3, "Product C", 15.0, 0, false),
-                new Product(4, "Product D", 50.0, 2, true),
-                new Product(5, "Product E", 100.0, 5, false),
-                new Product(6, "F", 100.0, 5, false),
+
         };
     }
 
@@ -59,7 +57,7 @@ public class ProductManagementTest {
                         new Product(1, "Product A", 10.0, 5, true),
                         new Product(2, "Product B", 20.0, 3, true),
                         new Product(3, "Product C", 15.0, 0, false),
-                        new Product(4, "Product D", 50.0, 2, true)
+                        new Product(4, "Product D", 50.0, 0, true)
                 },
         };
     }
@@ -100,12 +98,18 @@ public class ProductManagementTest {
     public void testUpdateProduct(Product product) {
         System.out.println("Running " + testName.getMethodName() + " with product: " + product);
         logProductDetails(product);
+
         productManager.addProduct(product);
-        Product updatedProduct = new Product(product.getId(), product.getName() + " Updated", product.getPrice() + 5, product.getQuantity() + 1, !product.isAvailable());
+
+        boolean newAvailability = product.getQuantity() > 0 ? true : !product.isAvailable();
+        Product updatedProduct = new Product(product.getId(), product.getName() + " Updated", product.getPrice() + 5, product.getQuantity() + 1, newAvailability);
+
         productManager.updateProduct(updatedProduct);
         Product retrievedProduct = productManager.getProduct(product.getId());
+
         System.out.println("Expected: " + updatedProduct);
         System.out.println("Actual: " + retrievedProduct);
+
         assertEquals(updatedProduct, retrievedProduct);
         System.out.println("Test passed!");
     }

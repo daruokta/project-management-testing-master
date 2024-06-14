@@ -4,15 +4,15 @@ public class Product {
     private int id;
     private String name;
     private double price;
-    private int quantity;
     private boolean isAvailable;
+    private int quantity;
 
     public Product(int id, String name, double price, int quantity, boolean isAvailable) {
         this.id = id;
         setName(name);  // Use the setter to apply validation
         this.price = price;
-        this.quantity = quantity;
         this.isAvailable = isAvailable;
+        setQuantity(quantity);  // Use the setter to apply validation
     }
 
     // Getters and Setters
@@ -49,7 +49,19 @@ public class Product {
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative");
+        } else if (quantity == 0) {
+            if (this.isAvailable) {
+                throw new IllegalArgumentException("Product cannot be available when quantity is 0");
+            }
+            this.quantity = quantity;
+        } else {
+            if (!this.isAvailable) {
+                throw new IllegalArgumentException("Product must be available when quantity is greater than 0");
+            }
+            this.quantity = quantity;
+        }
     }
 
     public boolean isAvailable() {
@@ -57,6 +69,9 @@ public class Product {
     }
 
     public void setAvailable(boolean isAvailable) {
+        if (isAvailable && this.quantity == 0) {
+            throw new IllegalArgumentException("Product cannot be available when quantity is 0");
+        }
         this.isAvailable = isAvailable;
     }
 }
