@@ -9,7 +9,7 @@ public class Product {
 
     public Product(int id, String name, double price, int quantity, boolean isAvailable) {
         this.id = id;
-        this.name = name;
+        setName(name);  // Use the setter to apply validation
         this.price = price;
         this.quantity = quantity;
         this.isAvailable = isAvailable;
@@ -30,6 +30,9 @@ public class Product {
     }
 
     public void setName(String name) {
+        if (name == null || name.length() < 5) {
+            throw new IllegalArgumentException("Product name must contain at least 5 letters");
+        }
         this.name = name;
     }
 
