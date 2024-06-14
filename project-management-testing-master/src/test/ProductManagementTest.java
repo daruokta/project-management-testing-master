@@ -45,6 +45,19 @@ public class ProductManagementTest {
         return new double[] {10.0, 20.0, 15.0, 50.0, 0.0};
     }
 
+    @DataPoints
+    public static Product[][] productsArrays() {
+        return new Product[][] {
+            {
+                new Product(1, "Product A", 10.0, 5, true),
+                new Product(2, "Product B", 20.0, 3, true),
+                new Product(3, "Product C", 15.0, 0, false),
+                new Product(4, "Product D", 50.0, 2, true)
+            },
+            // Tambahkan kombinasi lain yang ingin Anda tes di sini
+        };
+    }
+
     @Theory
     public void testAddProduct(Product product) {
         productManager.addProduct(product);
@@ -78,8 +91,7 @@ public class ProductManagementTest {
         productManager.getProducts().clear();
         Arrays.stream(products).forEach(productManager::addProduct);
         double expectedTotalValue = Arrays.stream(products)
-                .filter(Product::isAvailable)
-                .mapToDouble(product -> product.getPrice() * product.getQuantity())
+                .mapToDouble(product -> product.isAvailable() ? product.getPrice() * product.getQuantity() : 0)
                 .sum();
         assertEquals(expectedTotalValue, productManager.getTotalValueInStock(), 0.001);
     }
