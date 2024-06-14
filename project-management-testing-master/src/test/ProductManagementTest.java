@@ -96,7 +96,7 @@ public class ProductManagementTest {
         assertEquals(expectedTotalValue, productManager.getTotalValueInStock(), 0.001);
     }
 
-    @Test
+    @Theory
     public void testAddMultipleProducts() {
         List<Product> productList = Arrays.asList(
                 new Product(1, "Product A", 10.0, 5, true),
@@ -105,4 +105,24 @@ public class ProductManagementTest {
         productList.forEach(productManager::addProduct);
         assertEquals(productList.size(), productManager.getProducts().size());
     }
+    @Theory
+    public void testGetTotalQuantityInStock(Product[] products) {
+        productManager.getProducts().clear();
+        Arrays.stream(products).forEach(productManager::addProduct);
+        int expectedTotalQuantity = Arrays.stream(products)
+                .filter(Product::isAvailable)
+                .mapToInt(Product::getQuantity)
+                .sum();
+        assertEquals(expectedTotalQuantity, productManager.getTotalQuantityInStock());
+    }
+    @Theory
+    public void testGetProductCountByAvailability(Product[] products) {
+        productManager.getProducts().clear();
+        Arrays.stream(products).forEach(productManager::addProduct);
+        long availableProductCount = Arrays.stream(products).filter(Product::isAvailable).count();
+        long unavailableProductCount = Arrays.stream(products).filter(product -> !product.isAvailable()).count();
+        assertEquals(availableProductCount, productManager.getProductCountByAvailability().get(true).longValue());
+        assertEquals(unavailableProductCount, productManager.getProductCountByAvailability().get(false).longValue());
+    }
+
 }

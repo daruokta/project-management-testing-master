@@ -1,7 +1,7 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProductManager {
     private List<Product> products = new ArrayList<>();
@@ -44,5 +44,15 @@ public class ProductManager {
 
     public List<Product> getProducts() {
         return new ArrayList<>(products);
+    }
+    
+    // New method for calculating the sum of available products' quantities.
+    public int getTotalQuantityInStock() {
+        return products.stream().filter(Product::isAvailable).mapToInt(Product::getQuantity).sum();
+    }
+
+    // New method for grouping products by their availability and counting them.
+    public Map<Boolean, Long> getProductCountByAvailability() {
+        return products.stream().collect(Collectors.groupingBy(Product::isAvailable, Collectors.counting()));
     }
 }
